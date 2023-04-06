@@ -7,14 +7,13 @@ require('dotenv/config')
 
 //Configuracion de firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyA7UuHRTFSaOp_hObYQl6dUTct1NXr4DqU",
-  authDomain: "nutri-2123a.firebaseapp.com",
-  projectId: "nutri-2123a",
-  storageBucket: "nutri-2123a.appspot.com",
-  messagingSenderId: "503082198813",
-  appId: "1:503082198813:web:10688bed6c598e128a63f4"
+  apiKey: "AIzaSyBvpzA-SjgPzFa6N4mZwnphQB-_Xh6uEYg",
+  authDomain: "integrador-9aa2a.firebaseapp.com",
+  projectId: "integrador-9aa2a",
+  storageBucket: "integrador-9aa2a.appspot.com",
+  messagingSenderId: "471250525389",
+  appId: "1:471250525389:web:9f8c207b3139718bcadd84"
 };
-  
 
   //Inicializar BD de firebase
   const firebase = initializeApp(firebaseConfig)
@@ -39,7 +38,7 @@ const firebaseConfig = {
     const { nombre, correo, contra, confirmPass } = req.body;
   
     // Validación de los datos
-    if (nombre === '' || !correo || contra === '') {
+    if (nombre === '' || !correo || contra === '' ) {
       res.json({
         'alert': 'No rellenaste todos los campos correctamente'
       });
@@ -47,6 +46,10 @@ const firebaseConfig = {
       res.json({
         'alert': 'La contraseña debe contener al menos 6 caracteres'
       });
+    } else if ((confirmPass === '')) {
+        res.json({
+          'aler': 'Debes confirmar tu contraseña' 
+        });
     } else if (confirmPass !== contra) {
       res.json({
         'alert': 'Las contraseñas deben coincidir'
@@ -73,7 +76,7 @@ const firebaseConfig = {
                     'alert': 'Ha ocurrido un error en el servidor'
                   });
                 } else {
-                  req.body.contra = hash;
+                  req.body.password = hash;
   
                   // Guardar en la base de datos
                   setDoc(doc(users, correo), req.body).then(() => {
