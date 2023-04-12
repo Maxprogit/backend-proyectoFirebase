@@ -105,7 +105,7 @@ const firebaseConfig = {
       'alert': 'success',
       data
     })
-  })       
+  })    
 
   app.post('/login', (req, res) => {
     const { email, password } = req.body;
@@ -146,27 +146,43 @@ const firebaseConfig = {
   
 
   ///Ruta borrar
-app.post('/delete', (req, res) => {
-  let { email } = req.body
-
-  deleteDoc(doc(collection(db, 'users'), email))
-    .then((response) => {
+  app.post('/delete', (req, res) => {
+    let { email } = req.body;
+  
+    // Lógica para verificar que el usuario actual esté autenticado
+    // y obtener su correo electrónico
+    const authenticated = true; // Reemplaza con tu lógica de autenticación
+  
+    if (authenticated) {
+      // Eliminar la cuenta del usuario
+      const collectionRef = collection(db, 'users');
+      const docRef = doc(collectionRef, email); // Utilizar el correo electrónico como ID del documento
+  
+      deleteDoc(docRef)
+        .then((response) => {
+          res.json({
+            'alert': 'success'
+          });
+        })
+        .catch((error) => {
+          res.json({
+            'alert': 'No se pudo eliminar el usuario'
+          });
+        });
+    } else {
       res.json({
-        'alert': 'success'
-      })
-    })
-    .catch((error) => {
-      res.json({
-        'alert': 'No se pudo eliminar el usuario'
-      })
-    })
-})
+        'alert': 'Usuario no autenticado'
+      });
+    }
+  });
+  
+  
 
   app.post('/update', (req, res) => {
-    const { email, nombre, } = req.body
+    const { email, nombre } = req.body
 
     //Validacion de los datos 
-    if(nombre.length < 6) {
+    if(nombre < 6) {
       res.json({
         'alert': 'nombre requiere minimo 6 caracters'
       })
@@ -174,7 +190,7 @@ app.post('/delete', (req, res) => {
       db.collection('users').doc(email) 
       const updateData = {
         nombre, 
-        email,
+        email
       
       }
       updateDoc(doc(collection(db, 'users'), updateData, email))
@@ -190,9 +206,6 @@ app.post('/delete', (req, res) => {
       })
     }
   })
-
-  
-
 
 
   const PORT = process.env.PORT || 19000
